@@ -9,25 +9,63 @@
     <script src="https://unpkg.com/supersimpledev/react.js"></script>
     <script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
 
+    <script src="https://unpkg.com/supersimpledev/chatbot.js"></script>
+
     <script src="https://unpkg.com/supersimpledev/babel.js"></script>
     <script type="text/babel">
       // This is a component! All components must use PascalCase(each word starts with a capital letter)
-      function ChatInput(props) {
+      function ChatInput({ chatMessages, setChatMessages }) {
+        // When using state, always put the 'initial value' within the brackets
+        // The first argument is always the "CURRENT DATA"
+        // The second argument is always the "UPDATER FUNCTION", conventionally named 'set' + first_argument
+        const [inputText, setInputText] = React.useState(''); 
+
         function saveInputText(event) {
-          console.log(event.target.value);
+          setInputText(event.target.value);
         }
 
 
         // If there is nothing between tags, we can just add a / so for ex. <input />
+
+        function sendMessage() {
+          const newChatMessages = [
+            ...chatMessages,
+            {
+              message: inputText,
+              sender: "user",
+              id: crypto.randomUUID(),
+            },
+          ]
+
+          setChatMessages(newChatMessages);
+
+          const response = Chatbot.getResponse(inputText);
+          setChatMessages([
+            ...newChatMessages,
+            {
+              message: response,
+              sender: 'robot',
+              id: crypto.randomUUID(),
+            },
+          ]);
+
+          setInputText('');
+        }
+
         return (
-          // These empty tags are called fragments; function as divs but won't add divs to the DOM
+          // These empty tags are called fragments; function as divs but won't add divs to the DOM 
+          // Anything that starts with "on" is an event handler
+          // onChange runs the function within its curly brackets every time something changes
           <>
             <input
               placeholder="Send a message to Chatbot"
               size="30"
               onChange={saveInputText}
+              value={inputText}
             />
-            <button>Send</button>
+            <button
+              onClick={sendMessage}
+            >Send</button>
           </>
         );
       }
@@ -68,7 +106,23 @@
         );
       }
 
-      function ChatMessages() {
+      function ChatMessages({ chatMessages }) {
+        return (
+          <>
+            {chatMessages.map((chatMessages) => {
+              return (
+                <ChatMessage
+                  message={chatMessages.message}
+                  sender={chatMessages.sender}
+                  key={chatMessages.id}
+                />
+              );
+            })}
+          </>
+        );
+      }
+
+      function App() {
         const [chatMessages, setChatMessages] = React.useState([
           {
             message: "hello chatbot",
@@ -100,39 +154,15 @@
         const setChatMessages = array[1];
         */
 
-        function sendMessage() {
-          setChatMessages([
-            ...chatMessages,
-            {
-              message: "test",
-              sender: "user",
-              id: crypto.randomUUID(),
-            },
-          ]);
-        }
-
         return (
           <>
-            <button onClick={sendMessage}>Send message</button>
-
-            {chatMessages.map((chatMessage) => {
-              return (
-                <ChatMessage
-                  message={chatMessage.message}
-                  sender={chatMessage.sender}
-                  key={chatMessage.id}
-                />
-              );
-            })}
-          </>
-        );
-      }
-
-      function App() {
-        return (
-          <>
-            <ChatInput />
-            <ChatMessages />
+            <ChatInput 
+              chatMessages={chatMessages}
+              setChatMessages={setChatMessages}
+            />
+            <ChatMessages 
+              chatMessages={chatMessages}
+            />
           </>
         );
       }
