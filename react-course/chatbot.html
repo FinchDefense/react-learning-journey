@@ -13,6 +13,11 @@
     <script type="text/babel">
       // This is a component! All components must use PascalCase(each word starts with a capital letter)
       function ChatInput(props) {
+        function saveInputText(event) {
+          console.log(event.target.value);
+        }
+
+
         // If there is nothing between tags, we can just add a / so for ex. <input />
         return (
           // These empty tags are called fragments; function as divs but won't add divs to the DOM
@@ -20,6 +25,7 @@
             <input
               placeholder="Send a message to Chatbot"
               size="30"
+              onChange={saveInputText}
             />
             <button>Send</button>
           </>
@@ -63,7 +69,7 @@
       }
 
       function ChatMessages() {
-        const chatMessages = [
+        const [chatMessages, setChatMessages] = React.useState([
           {
             message: "hello chatbot",
             sender: "user",
@@ -84,16 +90,25 @@
             sender: "robot",
             id: "id4",
           },
-        ];
+        ]);
+        // This is array destructuring again:
+        // Sets chatMessages to array[0] and setChatMessages to array[1], order matters!
+
+        /*
+        const [chatMessages, setChatMessages] = array;
+        const chatMessages = array[0];
+        const setChatMessages = array[1];
+        */
 
         function sendMessage() {
-          chatMessages.push({
-            message: 'test',
-            sender: 'user',
-            id: crypto.randomUUID()
-          });
-
-          console.log(chatMessages);
+          setChatMessages([
+            ...chatMessages,
+            {
+              message: "test",
+              sender: "user",
+              id: crypto.randomUUID(),
+            },
+          ]);
         }
 
         return (
