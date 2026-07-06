@@ -6,6 +6,15 @@ body {
 
 input {
   font-size: 20px;
+  border: 1px solid black;
+  margin: 10px 0px;
+}
+
+button {
+  font-size: 15px;
+  margin-right: 5px;
+  border-radius: 8px;
+  
 }
 
 .header {
@@ -18,7 +27,4 @@ input {
   justify-content: center;
 }
 
-.button-container {
-  display: flex;
-  justify-content: center;
-}
+

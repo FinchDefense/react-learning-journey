@@ -26,14 +26,18 @@
     function App() {
       return (
         <>
-          <div class="header">Simple Task Tracker</div>
-          <input 
-            type='text'
-            placeholder='Please Input Your Text Here'
-            size = '30'
-          />
-          <button>Add Task</button>
-          <button>Delete Task</button>
+          <div className="header">Simple Task Tracker</div>
+          <div className="input-container">
+            <input 
+              type='text'
+              placeholder='Please Input Your Text Here'
+              size = '50'
+            />
+          </div>
+          <div className="button-container">
+            <button>Add Task</button>
+            <button>Delete Task</button>
+          </div>
         </>
       )
     }
