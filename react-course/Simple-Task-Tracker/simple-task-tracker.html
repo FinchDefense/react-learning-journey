@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple Task Tracker</title>
+</head>
+<body>
+  <div class="js-container"></div>
+
+  <script src="https://unpkg.com/supersimpledev/react.js"></script>
+  <script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
+
+  <script src="https://unpkg.com/supersimpledev/babel.js"></script>
+  <script type="text/babel">
+    function AddTask() {
+
+    }
+
+    function DeleteTask() {
+
+    }
+
+
+    function App() {
+      return (
+        <>
+          <div class="header">Simple Task Tracker</div>
+          <input 
+            type='text'
+            placeholder='Please Input Your Text Here'
+            size = '30'
+          />
+          <button>Add Task</button>
+          <button>Delete Task</button>
+        </>
+      )
+    }
+
+    const container = document.querySelector('.js-container');
+    ReactDOM.createRoot(container).render(<App />)
+  </script>
+</body>
+</html>
