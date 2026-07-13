@@ -77,6 +77,14 @@
         scrollbar-width: none;
       }
 
+      .welcome-message {
+        text-align: center;
+      }
+
+      .loading-spinner {
+        height: 40px;
+        margin: -15px;
+      }
     </style>
   </head>
   <body>
@@ -89,6 +97,19 @@
 
     <script src="https://unpkg.com/supersimpledev/babel.js"></script>
     <script type="text/babel">
+      function useAutoScroll(dependencies) {
+          const chatMessagesRef = React.useRef(null);
+          
+          React.useEffect(() => {
+            const containerElem = chatMessagesRef.current;
+            if (containerElem) {
+              containerElem.scrollTop = containerElem.scrollHeight;
+            }
+          }, dependencies);
+          
+          return chatMessagesRef; 
+        }
+
       // This is a component! All components must use PascalCase(each word starts with a capital letter)
       function ChatInput({ chatMessages, setChatMessages }) {
         // When using state, always put the 'initial value' within the brackets
@@ -112,18 +133,18 @@
         // If there is nothing between tags, we can just add a / so for ex. <input />
 
         async function sendMessage() {
-          if (isLoading || inputText === '') {
+          if (isLoading || inputText.trim() === '') {
             return;
           }
-
+          
           setIsLoading(true);
-          const messageToSend = inputText;
-          setInputText("");
+          const messageToSend = inputText; // ✅ Save before clearing
+          setInputText(""); // ✅ Clear after saving
 
           const newChatMessages = [
             ...chatMessages,
             {
-              message: messageToSend,
+              message: messageToSend, // ✅ Use the saved value
               sender: "user",
               id: crypto.randomUUID(),
             },
@@ -131,14 +152,17 @@
 
           setChatMessages([
             ...newChatMessages,
+            // This creates a temporary Loading... message.
+            // Because we don't save this message in newChatMessages,
+            // it will be removed later, when we add the response.
             {
-              message: 'Loading...',
+              message: <img src="loading-spinner.gif" className="loading-spinner" />,
               sender: 'robot',
               id: crypto.randomUUID()
             }
           ]);
 
-          const response = await Chatbot.getResponseAsync(messageToSend);
+          const response = await Chatbot.getResponseAsync(inputText);
           setChatMessages([
             ...newChatMessages,
             {
@@ -213,21 +237,8 @@
       }
 
       function ChatMessages({ chatMessages }) {
-        // Hooks should always be at the top of the component and never inside anything, like in an if statement or within a function
+        const chatMessagesRef = useAutoScroll([chatMessages]);
         
-        // React can automtically save an HTML element inside this ref or this container
-        // null is the initial value within this container 
-        const chatMessagesRef = React.useRef(null);
-
-        // Runs everytime component is created or updated
-        // The second argument, the array, is called a dependency array
-        React.useEffect(() => {
-          const containerElem = chatMessagesRef.current;
-          if (containerElem) {
-            containerElem.scrollTop = containerElem.scrollHeight;
-          }
-        }, [chatMessages]);
-
         return (
           <div 
           className="chat-messages-container"
@@ -246,28 +257,7 @@
       }
 
       function App() {
-        const [chatMessages, setChatMessages] = React.useState([
-          {
-            message: "hello chatbot",
-            sender: "user",
-            id: "id1",
-          },
-          {
-            message: "Hello! How can I help you?",
-            sender: "robot",
-            id: "id2",
-          },
-          {
-            message: "can you get me todays date?",
-            sender: "user",
-            id: "id3",
-          },
-          {
-            message: "Today is September 27",
-            sender: "robot",
-            id: "id4",
-          },
-        ]);
+        const [chatMessages, setChatMessages] = React.useState([]);
         // This is array destructuring again:
         // Sets chatMessages to array[0] and setChatMessages to array[1], order matters!
 
@@ -279,6 +269,7 @@
 
         return (
           <div className="app-container">
+            <p className="welcome-message">{chatMessages.length === 0 ? "Welcome to the chatbot project! Send a message using the textbox below." : ""}</p>
             <ChatMessages 
               chatMessages={chatMessages} 
             />
