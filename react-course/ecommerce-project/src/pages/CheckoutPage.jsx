@@ -1,6 +1,8 @@
 import './checkout-header.css'
 import './CheckoutPage.css'
 
+
+// Components in the pages folder are specific to certain pages
 export function CheckoutPage() {
   return (
     <>
