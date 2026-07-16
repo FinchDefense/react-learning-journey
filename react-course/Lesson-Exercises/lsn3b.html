@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 3 - Display as you type challenge</title>
+</head>
+<body>
+  <div class="js-container"></div>
+
+  <script src="https://unpkg.com/supersimpledev/react.js"></script>
+  <script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
+
+  <script src="https://unpkg.com/supersimpledev/babel.js"></script>
+  <script type="text/babel">
+    function App() {
+    const [inputText, setInputText] = React.useState('');
+    const [displayText, setDisplayText] = React.useState('');
+
+    function updateText(event) {
+      const value = event.target.value;
+      setInputText(value);
+      setDisplayText(value);  // Update display separately
+    }
+
+    function resetInputOnly() {
+      setInputText('');  // Clear only the input
+      // displayText stays the same
+    }
+
+    function example() {
+      setInputText('Jerry');
+    }
+
+    return (
+      <>
+        <input
+          value={inputText}
+          placeholder="Type a name here"
+          onChange={updateText}
+        />
+        <button onClick={resetInputOnly}>Clear Input Only</button>
+        <button onClick={example}>Example</button>
+        <p>{displayText}</p>
+      </>
+    );
+  }
+
+
+    const container = document.querySelector('.js-container');
+    ReactDOM.createRoot(container).render(<App />);
+  </script>
+</body>
+</html>

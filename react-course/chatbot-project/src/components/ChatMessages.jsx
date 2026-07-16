@@ -22,12 +22,15 @@ function ChatMessages({ chatMessages }) {
     <div 
     className="chat-messages-container"
     ref={chatMessagesRef}>
-      {chatMessages.map((chatMessages) => {
+      {chatMessages.map((msg, index) => {
+        // Use the id if it exists, otherwise fallback to the index.
+        // This ensures every item has a unique key and prevents the React warning.
         return (
           <ChatMessage
-            message={chatMessages.message}
-            sender={chatMessages.sender}
-            key={chatMessages.id}
+            message={msg.message}
+            sender={msg.sender}
+            key={msg.id || index}       // fallback key
+            timestamp={msg.timestamp}
           />
         );
       })}

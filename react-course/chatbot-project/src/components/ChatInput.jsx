@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { Chatbot } from 'supersimpledev'
 import './ChatInput.css';
+// Import the loading spinner image (make sure the path is correct)
+import LoadingSpinner from '../assets/loading-spinner.gif';
 
 // This is a component! All components must use PascalCase(each word starts with a capital letter)
 export function ChatInput({ chatMessages, setChatMessages }) {
@@ -33,12 +35,14 @@ export function ChatInput({ chatMessages, setChatMessages }) {
     const messageToSend = inputText; // ✅ Save before clearing
     setInputText(""); // ✅ Clear after saving
 
+    // Create a new message with a timestamp (so each message knows when it was sent)
     const newChatMessages = [
       ...chatMessages,
       {
-        message: messageToSend, // ✅ Use the saved value
+        message: messageToSend,
         sender: "user",
-        id: crypto.randomUUID(),
+        id: crypto.randomUUID(),      // every message gets a unique id
+        timestamp: Date.now(),
       },
     ];
 
@@ -48,23 +52,30 @@ export function ChatInput({ chatMessages, setChatMessages }) {
       // Because we don't save this message in newChatMessages,
       // it will be removed later, when we add the response.
       {
-        message: <img src="loading-spinner.gif" className="loading-spinner" />,
+        message: <img src={LoadingSpinner} className="loading-spinner" />,
         sender: 'robot',
-        id: crypto.randomUUID()
+        id: crypto.randomUUID(),
+        timestamp: Date.now(),
       }
     ]);
 
-    const response = await Chatbot.getResponseAsync(inputText);
+    // Use messageToSend instead of inputText (inputText is already cleared)
+    const response = await Chatbot.getResponseAsync(messageToSend);
     setChatMessages([
       ...newChatMessages,
       {
         message: response,
         sender: "robot",
         id: crypto.randomUUID(),
+        timestamp: Date.now(),
       },
     ]);
 
     setIsLoading(false)
+  }
+
+  function clearAllMessages() {
+    setChatMessages([]);
   }
 
   return (
@@ -83,7 +94,12 @@ export function ChatInput({ chatMessages, setChatMessages }) {
       <button 
         onClick={sendMessage}
         className="send-button"
-        >Send</button>
+        >Send
+      </button>
+      <button
+        onClick={clearAllMessages}
+        className="clear-button"
+      >Clear</button>
     </div>
   );
 }

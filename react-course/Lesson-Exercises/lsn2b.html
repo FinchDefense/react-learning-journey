@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>Lesson 2 Challenge Exercises - Components and Props</title>
+  </head>
+  <body>
+    <div class="js-container"></div>
+
+    <script src="https://unpkg.com/supersimpledev/react.js"></script>
+    <script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
+
+    <script src="https://unpkg.com/supersimpledev/babel.js"></script>
+    <script type="text/babel">
+      function App() {
+        return (
+          <>
+            <ProductDetails
+              product="Cotton socks"
+              price="10.90"
+              discountPrice="5.45"
+              imageSrc="cotton-socks.png"
+            />
+
+            <ProductDetails
+              product="Tennis Balls"
+              price="6.00"
+              imageSrc="tennis-balls.png"
+            />
+
+            <ProductDetails
+              product="Plain T-Shirt"
+              price="7.9"
+              imageSrc="plain-t-shirt.png"
+            />
+          </>
+        );
+      }
+
+      function ProductDetails({ product, price, discountPrice, imageSrc}) {
+        const result = discountPrice ? (
+            <>
+              <img src={imageSrc}></img>
+              <p>{product}</p>
+              <del>${price}</del>
+              <p>${discountPrice}</p>
+              <button>Add to Cart</button>
+            </>
+          ) : 
+          (
+            <>
+              <img src={imageSrc}></img>
+              <p>{product}</p>
+              <p>{price}</p>
+              <button>Add to Cart</button>
+            </>
+          );
+
+          return result;
+      }
+
+      const container = document.querySelector(".js-container");
+      ReactDOM.createRoot(container).render(<App />);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <style>
+    body {
+      margin-top: 0px;
+      margin-bottom: 0px;
+    }
+
+    .log-in {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 5px;
+    }
+
+    .log-in input {
+      border-radius: 4px;
+      border: 0.6px solid black;
+      padding: 5px 8px;
+    }
+
+    .log-in-password-and-show-btn {
+      display: flex;
+      gap: 5px;
+    }
+
+    .log-in-show-btn {
+      background-color: #E0E0E0;
+      border: 0.8px solid black;
+      border-radius: 2px;
+      font-size: 7px;
+      width: 30px;
+      height: 15px;
+      margin-top: auto;
+      margin-bottom: auto;
+    }
+
+    .log-in-btn {
+      color: white;
+      background-color: rgb(0,123,255);
+      border: none;
+      margin-right: 5px;
+      margin-top: 10px;
+      border-radius: 5px;
+      font-weight: 300;
+      font-size: 10px;
+      padding: 5px 10px;
+      }
+
+      .counter-container {
+        display: flex;
+        justify-content: center;
+        height: 100vh;
+        background-color: rgb(222, 222, 222);
+        align-items: center;
+        gap: 5px;
+      }
+
+      .counter-btn {
+        border: none;
+        border-radius: 1px;
+        color: white;
+        background-color: rgb(25, 135, 84);
+      }
+  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 4 Challenge Exercises</title>
+</head>
+<body>
+  <div class="js-container"></div>
+
+  <script src="https://unpkg.com/supersimpledev/react.js"></script>
+  <script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
+
+  <script src="https://unpkg.com/supersimpledev/dayjs.js"></script>
+
+  <script src="https://unpkg.com/supersimpledev/babel.js"></script>
+  <script type="text/babel">
+    function App3() {
+      const [count, setCount] = React.useState(0);
+      const [isAutoClicking, setIsAutoClicking] = React.useState(false);
+      const intervalIdRef = React.useRef(null);
+      
+      function toggleAutoClick() {
+        if (isAutoClicking) {
+          clearInterval(intervalIdRef.current);
+          intervalIdRef.current = null;
+          setIsAutoClicking(false);
+        }
+        else {
+          intervalIdRef.current = setInterval(() => {
+            setCount(prev => prev + 1);
+          }, 1000)
+          setIsAutoClicking(true);
+        }
+      }
+
+      React.useEffect(() => {
+        return () => {
+          if (intervalIdRef.current) {
+            clearInterval(intervalIdRef.current);
+          }
+        };
+      }, []);
+
+      return (
+        <div className="counter-container">
+          <button
+            onClick={() => setCount(prev => prev + 1)}
+            className="counter-btn"> 
+            Clicked {count} times
+          </button>
+          <button
+            onClick={() => setCount(0)}
+            className="counter-btn">
+            Reset
+          </button>
+          <button 
+            onClick={toggleAutoClick}
+            className="counter-btn">
+            {isAutoClicking ? "Stop" : "Start"} Auto Click
+          </button>
+        </div>
+      )
+    }
+
+    function App2() {
+      const[time, setTime] = React.useState(dayjs().format('HH:mm:ss'));
+
+      React.useEffect(() => {
+         const id = setInterval(() => {
+          setTime(dayjs().format("HH:mm:ss"));
+          console.log('run code');
+         }, 1000);
+
+         return () => clearInterval(id); // Cleanup
+      }, []);
+
+      return (
+        <p>Current time: {time}</p>
+      )
+    }
+
+    function App1() {
+      const [showPassword, setShowPassword] = React.useState(false);
+
+      return (
+        <div className="log-in-container">
+          <p className="log-in-title">Hello, welcome to my website</p>
+          <div className="log-in">
+            <input
+              placeholder="Email"
+              type="text"
+              size="30"
+            />
+            <div className="log-in-password-and-show-btn">
+              <input
+                placeholder="Password"
+                size="30"
+                type={showPassword ? "text" : "password"}
+              />
+              <button 
+                onClick={() => showPassword ? setShowPassword(false) : setShowPassword(true)}
+                className="log-in-show-btn">
+                Show
+              </button>
+            </div>
+          </div>
+          <div>
+            <button className="log-in-btn">Login</button>
+            <button className="log-in-btn">Sign up</button>
+          </div>
+        </div>
+      )
+    }
+
+    const container = document.querySelector('.js-container');
+    ReactDOM.createRoot(container).render(<App1 />)
+  </script>
+</body>
+</html>

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Task Tracker</title>
+  <style>
+    .done {
+      text-decoration: line-through;
+      opacity: 0.6;
+    }
+    .task {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 4px 0;
+    }
+    .stats {
+      display: flex;
+      gap: 20px;
+      padding: 10px;
+      background: #f0f0f0;
+      border-radius: 8px;
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="js-container"></div>
+
+  <script src="https://unpkg.com/supersimpledev/react.js"></script>
+  <script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
+  <script src="https://unpkg.com/supersimpledev/babel.js"></script>
+  
+  <script type="text/babel">
+    // SAMPLE DATA TO GET STARTED
+    const SAMPLE_TASKS = [
+      { id: 1, text: "Learn React", isDone: false },
+      { id: 2, text: "Build a project", isDone: false },
+      { id: 3, text: "Take a break", isDone: true },
+    ];
+
+    // ============================================
+    // 1. APP COMPONENT (Holds all the state)
+    // ============================================
+    function App() {
+      // State: the list of all tasks
+      const [tasks, setTasks] = React.useState(SAMPLE_TASKS);
+
+      // ADD: Add a new task to the list
+      function addTask(text) {
+        const newTask = {
+          id: Date.now(), // Simple unique ID
+          text: text,
+          isDone: false,
+        };
+        setTasks([...tasks, newTask]); // Spread old tasks + add new one
+      }
+
+      // TOGGLE: Flip isDone (true ↔ false) for a specific task
+      function toggleTask(id) {
+        setTasks(
+          tasks.map((task) =>
+            task.id === id ? { ...task, isDone: !task.isDone } : task
+          )
+        );
+      }
+
+      // DELETE: Remove a specific task from the list
+      function deleteTask(id) {
+        setTasks(tasks.filter((task) => task.id !== id));
+      }
+
+      // Count how many tasks are done
+      const totalTasks = tasks.length;
+      const doneTasks = tasks.filter((task) => task.isDone).length;
+
+      return (
+        <div>
+          <h1>✅ Task Tracker</h1>
+
+          {/* Pass the addTask function down to TaskInput */}
+          <TaskInput onAddTask={addTask} />
+
+          {/* Pass tasks and stats down to TaskStats */}
+          <TaskStats total={totalTasks} done={doneTasks} />
+
+          {/* Pass tasks and functions down to TaskList */}
+          <TaskList
+            tasks={tasks}
+            onToggle={toggleTask}
+            onDelete={deleteTask}
+          />
+        </div>
+      );
+    }
+
+    // ============================================
+    // 2. TASK INPUT COMPONENT
+    // ============================================
+    function TaskInput({ onAddTask }) {
+      // Local state for the input text
+      const [inputText, setInputText] = React.useState("");
+
+      // Update state as user types
+      function handleChange(event) {
+        setInputText(event.target.value);
+      }
+
+      // Actually add the task
+      function handleAdd() {
+        // Don't add empty tasks
+        if (inputText.trim() === "") return;
+        
+        onAddTask(inputText); // Call the function from App
+        setInputText(""); // Clear the input
+      }
+
+      // Press Enter to add
+      function handleKeyDown(event) {
+        if (event.key === "Enter") {
+          handleAdd();
+        }
+      }
+
+      return (
+        <div>
+          <input
+            type="text"
+            placeholder="Type a task here..."
+            value={inputText} // Controlled input
+            onChange={handleChange}
+            onKeyDown={handleKeyDown}
+          />
+          <button onClick={handleAdd}>Add</button>
+        </div>
+      );
+    }
+
+    // ============================================
+    // 3. TASK STATS COMPONENT
+    // ============================================
+    function TaskStats({ total, done }) {
+      return (
+        <div className="stats">
+          <span>📊 Total: {total}</span>
+          <span>✅ Done: {done}</span>
+          <span>⏳ Pending: {total - done}</span>
+        </div>
+      );
+    }
+
+    // ============================================
+    // 4. TASK LIST COMPONENT
+    // ============================================
+    function TaskList({ tasks, onToggle, onDelete }) {
+      return (
+        <div>
+          {tasks.map((task) => (
+            <TaskItem
+              key={task.id} // React needs this for lists
+              task={task}
+              onToggle={onToggle}
+              onDelete={onDelete}
+            />
+          ))}
+        </div>
+      );
+    }
+
+    // ============================================
+    // 5. TASK ITEM COMPONENT
+    // ============================================
+    function TaskItem({ task, onToggle, onDelete }) {
+      return (
+        <div className="task">
+          <input
+            type="checkbox"
+            checked={task.isDone}
+            onChange={() => onToggle(task.id)} // Call toggle when checked
+          />
+          <span className={task.isDone ? "done" : ""}>
+            {task.text}
+          </span>
+          <button onClick={() => onDelete(task.id)}>×</button>
+        </div>
+      );
+    }
+
+    // ============================================
+    // RENDER THE APP
+    // ============================================
+    const container = document.querySelector(".js-container");
+    ReactDOM.createRoot(container).render(<App />);
+  </script>
+</body>
+</html>

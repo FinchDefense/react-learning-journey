@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <style>
+      button {
+        font-family:
+          "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+        font-size: 15px;
+        padding: 5px;
+        border-radius: 8px;
+        border: 2px solid black;
+      }
+
+      .cotton-socks {
+        margin-top: 100px;
+      }
+
+      .shopping {
+        margin-top: 100px;
+      }
+    </style>
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lesson 1 Exercises - React Basics, JSX</title>
+  </head>
+  <body>
+    <div class="js-container"></div>
+
+    <script src="https://unpkg.com/supersimpledev/react.js"></script>
+    <script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
+
+    <script src="https://unpkg.com/supersimpledev/dayjs.js"></script>
+
+    <script src="https://unpkg.com/supersimpledev/babel.js"></script>
+    <script type="text/babel">
+      const date = dayjs().format("MMMM D");
+      console.log(date);
+
+      const productCost = 10 + 8 * 2;
+      const shippingCost = 5;
+      console.log(productCost);
+
+      const container = document.querySelector(".js-container");
+      const root = ReactDOM.createRoot(container);
+
+      // Function to create the JSX
+      function renderApp() {
+        const div = (
+          <div>
+            <button>Good job!</button>
+            <p>My name is Jerry</p>
+            <p>Today is {date}</p>
+            <p>Current time: {dayjs().format("HH:mm:ss")}</p>
+
+            <div className="cotton-socks">
+              <p>Cotton socks</p>
+              <p>Price: $10</p>
+              <button>Add to Cart</button>
+            </div>
+
+            <div className="shopping">
+              <p>Product cost: ${productCost}</p>
+              <p>Shipping cost: ${shippingCost}</p>
+              <p>Total cost: ${productCost + shippingCost}</p>
+              <button>Place your order</button>
+            </div>
+          </div>
+        );
+
+        root.render(div);
+      }
+
+      // Initial render
+      renderApp();
+
+      // Update every second
+      setInterval(renderApp, 1000);
+    </script>
+  </body>
+</html>

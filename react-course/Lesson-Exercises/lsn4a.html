@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <style>
+    .ON-btn {
+      background-color: rgb(25, 135, 84);
+      color: white;
+      border-radius: 6px;
+      min-width: 40px;
+      min-height: 30px;
+      border: none;
+    }
+
+    .OFF-btn {
+      background-color: rgb(220, 53, 69);
+      color: white;
+      border-radius: 6px;
+      min-width: 40px;
+      min-height: 30px;
+      border: none;
+    }
+  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 4 Exercises - CSS and Hooks</title>
+</head>
+<body>
+  <div class="js-container"></div>
+
+  <script src="https://unpkg.com/supersimpledev/react.js"></script>
+  <script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
+
+  <script src="https://unpkg.com/supersimpledev/babel.js"></script>
+  <script type="text/babel">
+    let testState = { isButtonOn: true };
+
+    function App() {
+      const [isButtonOn, setIsButtonOn] = React.useState(true);
+
+      return (
+        <button
+          className={isButtonOn === true ? 'ON-btn' : 'OFF-btn'}
+          onClick={() => isButtonOn ? setIsButtonOn(false) : setIsButtonOn(true)}>
+          {isButtonOn ? "ON" : "OFF"}
+        </button>
+      )
+    }
+
+    const container = document.querySelector('.js-container');
+    ReactDOM.createRoot(container).render(<App />);
+  </script>
+</body>
+</html>
