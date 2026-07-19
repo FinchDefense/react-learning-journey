@@ -3,7 +3,7 @@ import { NavLink } from 'react-router'; // Allows us to go to another page witho
 import './header.css'; 
 
 // Components in the 'components' folder are public and general
-export function Header({ cart }) {
+export function Header({ cart = [] }) {
   let totalQuantity = 0;
 
   cart.forEach((cartItem) => {
