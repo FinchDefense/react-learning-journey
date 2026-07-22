@@ -21,7 +21,7 @@ export function CheckoutPage({ cart=[] }) {
       setPaymentSummary(response.data);
     };
 
-    fetchCheckoutData();
+    fetchCheckoutData(); 
   }, []);
 
   return (
